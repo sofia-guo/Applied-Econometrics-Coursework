@@ -1,0 +1,308 @@
+---
+title: "Econ 142: HW 3"
+author: "Sofia Guo"
+date: "2/8/2019"
+output: pdf_document
+header-includes:
+- \usepackage{pdflscape}
+- \newcommand{\blandscape}{\begin{landscape}}
+- \newcommand{\elandscape}{\end{landscape}}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+### 1(a).  Question
+Show that if $x_{i}$ contains a constant, then $\bar y = \bar x^{'}\hat \beta$, where $\bar y = \frac{1}{N}\sum_{i=1}^Ny_{i}$ and $\bar x = \frac{1}{N}\sum_{i=1}^Nx_{i}$
+
+# 1(a) Proof:
+Under implications of defining properties of the PRF, one FOC is $E[x_{i}\hat u_{i}] = 0$. Thus:
+
+$\Rightarrow E[y_{i}] = E[x_{i}^{'}\hat \beta + \hat u_{i}]$ by taking the expected value of the sample regression equation $y_{i} = x_{i}^{'}\hat \beta + \hat u_{i}$ \newline
+$\Rightarrow E[y_{i}] = E[x_{i}^{'}\hat \beta] + E[\hat u_{i}]$ by distributing the expectation across sums \newline
+$\Rightarrow E[y_{i}] = E[x_{i}^{'}\hat \beta] + 0$ from the sample FOC $E[x_{i}\hat u_{i}] = \frac{1}{N}\sum_{i=1}^Nx_{i}\hat u_{i} = 0$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^Ny_{i} = \frac{1}{N}\sum_{i=1}^Nx_{i}^{'}\hat \beta$ from taking the expectation \newline
+$\therefore \bar y = \bar x^{'} \hat \beta$ using the definitions $\bar y = \frac{1}{N}\sum_{i=1}^Ny_{i}$ and $\bar x = \frac{1}{N}\sum_{i=1}^Nx_{i}$  $\blacksquare$.
+
+### 1(b). Question
+Show that if $x_{i}$ contains a dummy variable for membership in group _g_ (which has $N_{g}$ observations in the sample) then $\bar y_{g} = \bar x^{'}_{g}\hat \beta$ where $\bar y_{g} = \frac{1}{N_{g}}\sum_{i\in g}y_{i}$, and $\bar x_{g} = \frac{1}{N_{g}}\sum_{i\in g}x_{i}$.
+
+# 1(b) Proof:
+The FOC require $\sum_{i=1}^ND_{i}(y_{i}-x_{i}^{'}\hat \beta) = 0 = \sum_{i \in g}(y_{i} - x_{i}^{'}\hat \beta)$. Thus: \newline
+$\Rightarrow \frac{1}{N_{g}}\sum_{i \in g}(y_{i} - x_{i}^{'}\hat \beta) = 0$ just by taking the expected value \newline
+$\Rightarrow \frac{1}{N_{g}}\sum_{i \in g}y_{i} = \frac{1}{N_{g}}\sum_{i \in g}x_{i}^{'}\hat \beta$ distributing the sums and bringing second term over \newline
+$\therefore \bar y_{g} = \bar x_{g}^{'}\hat \beta$ since $\bar y_{g} = \frac{1}{N_{g}}\sum_{i\in g}y_{i}$, and $\bar x_{g} = \frac{1}{N_{g}}\sum_{i\in g}x_{i}$ $\blacksquare$.
+
+### 1(c). Question
+Complete the proof of the Frisch-Waugh Theorem for the sample OLS regression coefficients by showing that the $j^{th}$ row of $\hat \beta$ is: 
+
+\begin{equation}
+\hat \beta_{j} = [\frac{1}{N}\sum_{i=1}^N\hat \xi_{i}^{2}]^{-1}[\frac{1}{N}\sum_{i=1}^N\hat \xi_{i}y_{i}]
+\end{equation}
+
+# 1(c) Proof:
+$\Rightarrow$ We know from the FOC for the sample regression that $\frac{1}{N}\sum_{i=1}^{N}x_{i}\hat u_{i} = 0$ \newline
+$\Rightarrow$ Then define $\hat u_{i} = y_{i} - x_{i}^{'}\hat \beta$ from the sample OLS regression $y_{i} = x_{i}^{'}\hat \beta + \hat u_{i}$ \newline
+$\Rightarrow$ We also know from the FOC that $\frac{1}{N}\sum_{i=1}^{N}x_{(\sim j)i}\hat \xi_{i} = 0$ \newline
+$\Rightarrow$ Then define $\hat \xi_{i} = x_{ji} - x_{(\sim j)i}\hat \pi$ from the auxiliary regression $x_{ji} = x_{(\sim j)i}\hat \pi + \hat \xi_{i}$ \newline
+$\Rightarrow$ We know that the sample regression equation is $y_{i} = \hat \beta_{1}x_{1i} + \hat \beta_{2}x_{2i} + \dots + \hat \beta_{j}x_{ji} + \dots+ \hat \beta_{K}x_{Ki} + \hat u_{i}$ \newline
+$\Rightarrow$ Thus we can write 
+
+\begin{equation}
+\label{eq:xi}
+\frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}y_{i} = \frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}(\hat \beta_{1}x_{1i} + \hat \beta_{2}x_{2i} + \dots + \hat \beta_{j}x_{ji} + \dots+ \hat \beta_{K}x_{Ki} + \hat u_{i})
+\end{equation}
+from the previous step \newline
+$\Rightarrow$ Since $\frac{1}{N}\sum_{i=1}^{N}x_{(\sim j)i}\hat \xi_{i} = 0$ we know that $\hat\xi_{i} \perp x_{(\sim j)i}$ \newline
+$\Rightarrow$ Since $\hat \xi_{i} = x_{ji} - x_{(\sim j)i}\hat \pi$ we know that $\hat\xi_{i} \perp \hat u_{i}$ because $\frac{1}{N}\sum_{i=1}^{N}x_{i}\hat u_{i} = 0$ ($x_{i} \perp \hat u_{i}$) \newline
+$\Rightarrow$ Thus we know that all the terms in \ref{eq:xi} except $\hat \beta_{j}x_{ji}$ equal 0; Thus: \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}y_{i} = \hat \beta_{j}\frac{1}{N}\sum_{i=1}^{N}x_{ji}$ by simplification \newline
+$\Rightarrow$ Using $x_{ji} = x_{(\sim j)i}\hat \pi + \hat \xi_{i}$ we substitute into $\frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}x_{ji} = \frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}(x_{(\sim j)i}\hat \pi + \hat \xi_{i}) = \frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}^{2}$ because $\hat \xi_{i} \perp x_{(\sim j)i}$ using the FOC for $\hat \pi$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}y_{i} = \hat \beta_{j}\frac{1}{N}\sum_{i=1}^{N}\hat \xi_{i}^{2}$ by substitution \newline
+$\therefore \hat \beta_{j} =[\frac{1}{N}\sum_{i=1}^N\hat \xi_{i}^{2}]^{-1}[\frac{1}{N}\sum_{i=1}^N\hat \xi_{i}y_{i}]$ $\blacksquare$.
+
+## 2. OVB Dataset
+```{r}
+#load libraries
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+library(xlsx)
+library(reshape2)
+library(stargazer)
+library(lubridate)
+library(lmtest)
+library(ivpack)
+library(kableExtra)
+
+#import dataset
+ovb_raw <- read.csv("/Users/sofia/Box/Cal (sofiaguo@berkeley.edu)/2018-19/Spring 2019/Econ 142/PSETS/PSET 3/ovb.csv", stringsAsFactors = F)
+```
+
+### 2(a). Question:
+
+Write an expression for the OLS estimate of the coefficient on immigrant statues from logwage = constant, immigrant statues, if the true model is logwage = constant, education, immigrant status.
+
+# 2(a) Solution:
+
+\begin{equation}
+\hat \beta_{imm}^{0} = \hat \beta_{imm} + \hat \pi_{2}\hat \beta_{educ}
+\end{equation}
+
+where $\hat \pi_{2}$ is the coefficient on immigration from regressing immigration on education (the omitted variable):
+
+\begin{equation}
+education_{i} = \hat \pi_{1} + \hat \pi_{2}immigration_{i} + \hat \xi_{i}
+\end{equation}
+
+### 2(b). Question:
+
+Estimate the 5 models and show values for (a), first female then male.
+
+1. logwage = constant, immigrant statues
+2. logwage = constant, education
+3. immigrant status = constant, education
+4. education = constant, immigrant status
+5. logwage = constant, education, immigrant status
+
+# 2(b) Solution:
+
+### Values for the female regressions:
+
+$\hat \pi_{2_{female}} = -1.49214$
+
+$\hat \beta_{imm_{female}} = -0.179986$
+
+$\hat \beta_{educ_{female}} = 0.113853$
+
+$\hat \beta_{imm_{female}}^{0} = -0.179986 + (-1.49214)*(0.113853) = -0.3498706$
+
+### Values for the male regressions:
+
+$\hat \pi_{2_{male}} = -1.61176$
+
+$\hat \beta_{imm_{male}} = -0.24477$
+
+$\hat \beta_{educ_{male}} = 0.105620$
+
+$\hat \beta_{imm_{male}}^{0} = -1.61176 + (-0.24477)*(0.105620) = -1.637613$
+
+### Code:
+```{r}
+#estimate model 1 for both genders
+
+#filter females only
+fem <- ovb_raw %>%
+  dplyr::filter(female == 1)
+
+#filter males only
+male <- ovb_raw %>%
+  dplyr::filter(female == 0)
+
+#run regression 1 for females
+reg_fem_1 <- summary(lm(logwage ~ imm, data = fem))
+reg_fem_1
+#run regression 1 for males
+
+reg_male_1 <- summary(lm(logwage ~ imm, data = male))
+reg_male_1
+```
+
+```{r}
+#estimate model 2 for both genders
+
+#run regression 2 for females
+reg_fem_2 <- summary(lm(logwage ~ educ, data = fem))
+reg_fem_2
+
+#run regression 2 for males
+reg_male_2 <- summary(lm(logwage ~ educ, data = male))
+reg_male_2
+```
+
+
+```{r}
+#estimate model 3 for both genders
+
+#run regression 3 for females
+reg_fem_3 <- summary(lm(imm ~ educ, data = fem))
+reg_fem_3
+
+#run regression 3 for males
+reg_male_3 <- summary(lm(imm ~ educ, data = male))
+reg_male_3
+```
+
+```{r}
+#estimate model 4 for both genders
+
+#run regression 4 for females
+reg_fem_4 <- summary(lm(educ ~ imm, data = fem))
+reg_fem_4
+
+#run regression 2 for males
+reg_male_4 <- summary(lm(educ ~ imm, data = male))
+reg_male_4
+```
+
+```{r}
+#estimate model 5 for both genders
+
+#run regression 5 for females
+reg_fem_5 <- summary(lm(logwage ~ educ + imm, data = fem))
+reg_fem_5
+
+#run regression 2 for males
+reg_male_5 <- summary(lm(logwage ~ educ + imm, data = male))
+reg_male_5
+```
+
+### 2(c). Question:
+
+Redo 5 models for Females and Males, distinguishing 3 groups of immigrants. Put and include results in 2 new tables similar to the table in lecture 5.
+
+```{r}
+#add dummies for asian, hispanic and other immigrants
+
+#make female data frame
+ovb_race_imm_fem <- ovb_raw %>%
+  mutate(asian_imm = as.numeric(asian == 1 & imm ==1 & hispanic ==0),
+         hispanic_imm = as.numeric(hispanic == 1 & imm ==1 & asian ==0),
+         other_imm = as.numeric(imm ==1 & asian ==0 & hispanic==0)) %>%
+  dplyr::filter(female ==1)
+
+#make male data frame
+ovb_race_imm_male <- ovb_raw %>%
+  mutate(asian_imm = as.numeric(asian == 1 & imm ==1 & hispanic ==0),
+         hispanic_imm = as.numeric(hispanic == 1 & imm ==1 & asian ==0),
+         other_imm = as.numeric(imm ==1 & asian ==0 & hispanic==0)) %>%
+  dplyr::filter(female ==0)
+```
+
+```{r}
+#run regression 1 for females
+reg_fem_1_imm <- lm(logwage ~ imm + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_fem)
+
+#run regression 1 for males
+reg_male_1_imm <- lm(logwage ~ imm + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_male)
+```
+
+```{r}
+#estimate model 2 for both genders
+
+#run regression 2 for females
+reg_fem_2_imm <- lm(logwage ~ educ + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_fem)
+
+#run regression 2 for males
+reg_male_2_imm <- lm(logwage ~ educ + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_male)
+```
+
+
+```{r}
+#estimate model 3 for both genders
+
+#run regression 3 for females
+reg_fem_3_imm <- lm(imm ~ educ + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_fem)
+
+#run regression 3 for males
+reg_male_3_imm <- lm(imm ~ educ + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_male)
+```
+
+```{r}
+#estimate model 4 for both genders
+
+#run regression 4 for females
+reg_fem_4_imm <- lm(educ ~ imm + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_fem)
+
+#run regression 4 for males
+reg_male_4_imm <- lm(educ ~ imm + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_male)
+```
+
+```{r}
+#estimate model 5 for both genders
+
+#run regression 5 for females
+reg_fem_5_imm <- lm(logwage ~ educ + imm + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_fem)
+
+#run regression 5 for males
+reg_male_5_imm <- lm(logwage ~ educ + imm + asian_imm + hispanic_imm + other_imm, data = ovb_race_imm_male)
+```
+
+
+# 2(c) Tables:
+
+\blandscape
+```{r, results = 'asis'}
+stargazer(reg_fem_1_imm, 
+          reg_fem_2_imm,
+          reg_fem_3_imm,
+          reg_fem_4_imm,
+          reg_fem_5_imm,
+          type = "latex", title = "Female Immigrant Regression
+          Results",
+          header = F,
+          multicolumn = F,
+          column.sep.width = '0.1pt',
+          single.row = T,
+          omit.stat = c("f", "ser"))
+```
+\elandscape
+
+
+\blandscape
+```{r, results = 'asis'}
+stargazer(reg_male_1_imm, 
+          reg_male_2_imm,
+          reg_male_3_imm,
+          reg_male_4_imm,
+          reg_male_5_imm,
+          type = "latex", title = "Male Immigrant Regression
+          Results",
+          header = F,
+          multicolumn = F,
+          column.sep.width = '0.1pt',
+          single.row = T,
+          omit.stat = c("f", "ser"))
+```
+\elandscape

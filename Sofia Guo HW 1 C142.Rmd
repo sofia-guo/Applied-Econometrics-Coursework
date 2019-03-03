@@ -1,0 +1,277 @@
+---
+title: "Sofia Guo HW 1 C142"
+author: "Sofia Guo"
+date: "1/24/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo=F}
+#load libraries
+library(dplyr)
+library(ggplot2)
+library(statar)
+library(haven)
+library(gmodels)
+library(magrittr)
+library(reshape2)
+library(Hmisc)
+library(plotly)
+```
+
+
+#1. Conduct a simulation of drawing sample size *n* from Bernoulli distribution with mean *p*.
+
+```{r}
+#set seed for consistent results
+set.seed(1234)
+
+#conduct each simulation
+case1 <- rbinom(1000, 30, 0.05)
+case2 <- rbinom(1000, 30, 0.25)
+case3 <- rbinom(1000, 60, 0.05)
+case4 <- rbinom(1000, 60, 0.25)
+
+#function to find means, standard deviations, and ci length
+
+find_stats <- function(casenum, n, p) {
+  means <- casenum/n
+  s_d <- (means*(1-means))^(1/2)
+  ci_low <- means-((1.96*s_d)/n^(1/2))
+  ci_hi <- means+((1.96*s_d)/n^(1/2))
+  ci_length <- ci_hi-ci_low
+  in_ci <- ci_low <= p & ci_hi >= p
+  return(data.frame("Ybar" = means, "StDev" = s_d, "CI low" = ci_low, "CI High" = ci_hi, "CI length" = ci_length, "In CI" = in_ci))
+}
+
+#apply to all cases
+case1_out <- find_stats(case1, 30, 0.05)
+case2_out <- find_stats(case2, 30, 0.25)
+case3_out <- find_stats(case3, 60, 0.05)
+case4_out <- find_stats(case4, 60, 0.25)
+
+#display results
+head(case1_out)
+head(case2_out)
+head(case3_out)
+head(case4_out)
+
+```
+
+
+## a) Report the mean estimate of p (the true mean) for each case
+
+For case 1 where (n,p) is (30, 0.05):
+```{r}
+  mean(case1_out$Ybar)
+```
+
+For case 2 where (n,p) is (30, 0.25):
+```{r}
+  mean(case2_out$Ybar)
+```
+
+For case 3 where (n,p) is (60, 0.05):
+```{r}
+  mean(case3_out$Ybar)
+```
+
+For case 4 where (n,p) is (60, 0.25):
+```{r}
+  mean(case4_out$Ybar)
+```
+
+## b) Report the mean estimate of s (the true standard deviation) for each case
+
+For case 1 where (n,p) is (30, 0.05):
+```{r}
+  mean(case1_out$StD)
+```
+
+For case 2 where (n,p) is (30, 0.25):
+```{r}
+  mean(case2_out$StD)
+```
+
+For case 3 where (n,p) is (60, 0.05):
+```{r}
+  mean(case3_out$StD)
+```
+
+For case 4 where (n,p) is (60, 0.25):
+```{r}
+  mean(case4_out$StD)
+```
+
+## c) Report the fraction of the time that the CI contains the true p (coverage rate) for each case
+
+For case 1 where (n,p) is (30, 0.05):
+```{r}
+sum(case1_out$In.CI==T) /1000
+```
+
+For case 2 where (n,p) is (30, 0.25):
+```{r}
+sum(case2_out$In.CI==T) /1000
+```
+
+For case 3 where (n,p) is (60, 0.05):
+```{r}
+sum(case3_out$In.CI==T) / 1000
+```
+
+For case 4 where (n,p) is (60, 0.25):
+```{r}
+sum(case4_out$In.CI==T) / 1000
+```
+## Do you agree that n or 30 or larger is enough to ensure that asymptotic confidence intervals work well?
+According to the results to part b), it seems like the fraction of time that the CI for all cases contains the true p is pretty high (low at 79%, high at 95% of the time). Depending on how accurate one desires their estimates to be, if ~80% accuracy is "well" and accurate, then one may say that n of 30 or more is enough. However, if one is shooting for near 100% accuracy, the answer would be that n should be at least more than 60 (which yields only a low 90's percent accuracy) to ensure that asymptotic confidence intervals are working "well".
+
+#2. Working with mother's weight dataset
+
+## a) Develop the following graphs:
+
+### i) Find the deciles of the mother's weight, then put each mother in a decile, and get the mean birthweight of babies. Plot the mean baby weight against mean mother birthweight in decile (binscatter plot):
+```{r}
+#load dataset in
+mothers <- read.csv("/Users/sofia/Box/Cal (sofiaguo@berkeley.edu)/2018-19/Spring 2019/Econ 142/PSETS/ps1.csv")
+
+#find deciles of mother's weight 
+momw_dec_array <- quantile(mothers$momweight, prob = seq(0, 1, length = 11), type = 5)
+
+momw_dec_array
+
+#construct the binscatter
+ggplot(mothers, aes(momweight, babyweight)) +
+    geom_smooth(method='lm')+
+  labs(y = 'Baby weight (g)', x = 'Mother weight (lbs)',
+  title = 'Bin-scatter of mean mother & baby weight') +
+  stat_summary_bin(fun.y='mean', bins=10,
+                   color='orange', size=2, geom='point')+
+  theme_minimal()
+```
+
+### ii) In addition to the mean baby's weight, construct the 10, 25, 50, 75 and 90 percentiles and plot against mean mother's weight in each decile. Any interesting patterns?
+```{r}
+#plot the new data
+ggplot(mothers, aes(momweight, babyweight)) +
+  geom_smooth(method='lm')+
+  labs(y = 'Baby weight (g)', x = 'Mother weight (lbs)',
+  title = 'Bin-scatter of mean mother & baby weight') +
+    stat_summary_bin(fun.y='mean', bins=10,
+                   color='orange', size=2, geom='point') +
+    stat_summary_bin(fun.y='mean', bins=4,
+                   color='red', size=3, geom='point')+
+  theme_minimal()
+
+```
+There is a pattern appearing where the larger bins show a smoother, flatter relationship (the blue line indicating the best fit for the original data). The red dots indicating the quintiles show a logistic-type relationship, where baby weight increases at a slower rate as mothers are heavier. You can see a similar pattern but less clear in the decile scatter with orange dots. This might suggest that the relationship between infant birth weight and mother weight before pregnancy is logistic with decreasing returns to scale.
+
+### iii) Redo i) using individual 1-lb values of mother's weight and compare to binscatter plot.
+```{r}
+#construct just a scatter using 1-lb increments for mother's weight
+
+ggplot(mothers, aes(momweight, babyweight)) +
+    geom_smooth(method='lm')+
+  labs(y = 'Baby weight (g)', x = 'Mother weight (lbs)',
+  title = 'Bin-scatter of mean mother & baby weight') +
+  stat_summary_bin(fun.y='mean', bins=max(mothers$momweight)-min(mothers$momweight),
+                   color='orange', size=1, geom='point')+
+  stat_summary_bin(fun.y='mean', bins=4,
+                   color='red', size=3, geom='point')+
+  theme_minimal()
+```
+Compared to the decile plot, this is much more dispersed especially towards the higher end of mother weight. Compared to the quintile representation in red, although the 1-lb bins begin as a logistic-looking relationship, it disperses when mother weight reaches above 200 lbs, suggesting that the relationship may not be as simple as a logistic one.
+
+## b) Divide mothers into 5‐pound buckets, starting at 95 pounds. Calculate baby weights separately for 4 groups of mother’s within each bucket.
+```{r}
+
+#filter mothers weight starting at 95
+momw_95 <- mothers %>%
+  dplyr::filter(momweight >= 95) %>%
+  arrange(momweight)
+
+#find number of bins needed
+(max(momw_95$momweight) - 95)/5
+
+#rounding up 36.8 to 37 total bins of 5 pounds each, add a categorization to the data frame
+momw_95_bin <- momw_95 %>%
+  mutate(mombuckets = as.numeric(cut(momw_95$momweight, 37)))
+
+#calculate baby weights for the 4 groups specified
+
+momh_60 <- momw_95_bin %>%
+  dplyr::filter(momheight<= 60) %>%
+  group_by(mombuckets) %>%
+  dplyr::summarize(meanbw = mean(babyweight))
+
+head(momh_60)
+
+momh_61_63 <- momw_95_bin %>%
+  dplyr::filter(momheight > 61 & momheight < 63) %>%
+  group_by(mombuckets) %>%
+  dplyr::summarize(meanbw = mean(babyweight))
+
+head(momh_61_63)
+
+momh_64_66 <- momw_95_bin %>%
+  dplyr::filter(momheight > 64 & momheight < 66) %>%
+  group_by(mombuckets) %>%
+  dplyr::summarize(meanbw = mean(babyweight))
+
+head(momh_64_66)
+
+momh_67 <- momw_95_bin %>%
+  dplyr::filter(momheight >=67) %>%
+  group_by(mombuckets) %>%
+  dplyr::summarize(meanbw = mean(babyweight))
+
+head(momh_67)
+```
+
+```{r}
+#plot mean baby weights against the median weight in the bucket
+
+midpoints <- seq(96.5, 276.5, 5)
+midpoints_df <- data.frame(mombuckets = 1:37,
+           midheights = midpoints)
+
+momh_master <- rbind(momh_60, momh_61_63, momh_64_66, momh_67)
+
+momh_midpoints <- merge(momh_master, midpoints_df, by = 'mombuckets')
+
+#plot the new data
+ggplot(momh_midpoints, aes(midheights, meanbw)) +
+  geom_point() +
+  labs(x = 'Mother mid-point weight (lbs)', y = 'Mean baby birth weight (g)',
+  title = 'Bin-scatter of midpoint mother & baby weight (lbs)') +
+  theme_minimal()
+```
+Looking at each mid-point weight for mothers, the four corresponding data points represent the mean baby weight for the four height cateogories. Given that there does not seem to be a consistent or clear separation between the four points as mother weight changes (i.e. you do not see the patttern of 4 distinct 'lines' being formed for each height category), this graph suggests that mother height does not have a consistent or clear effect on birthweight. However, the log-like relationship between mother weight and birthweight persists in this graph, further supporting the idea that while heavier mothers produce heavier babies, each additional pound a mother weighs has less effect on increasing birthweight than when mothers are below 200 lbs.
+
+## c) Construct a 3D binscatter
+```{r}
+#construct 5 binsc
+
+momw_df <- mutate(mothers, momw_quartile = as.integer(cut(momweight, quantile(momweight, probs=0:4/4), include.lowest=TRUE)),
+                  momh_quartile = as.integer(cut(momheight, quantile(momheight, probs=0:4/4), include.lowest=TRUE)))
+
+momw_df_final <- momw_df %>%
+  group_by(momw_quartile, momh_quartile) %>%
+  dplyr::summarize(meanbw = mean(babyweight),
+                   momh = mean(momheight),
+                   momw = mean(momweight))
+
+plot_ly(x=momw_df_final$momw, y=momw_df_final$momh, z=momw_df_final$meanbw, type="scatter3d", mode="markers", color=momw_df_final$momw_quartile) %>%
+  layout(
+    title = "Avg. birth weight (g) by quartiles of avg mothers' height (in) and weight (lb)",
+    scene = list(
+      xaxis = list(title = "Avg mother weight (lb)"),
+      yaxis = list(title = "Avg mother height (in)"),
+      zaxis = list(title = "Avg birth weight (g)")
+    ))
+```
+

@@ -1,0 +1,348 @@
+---
+title: "Sofia Guo Econ 142 PSET 4"
+author: "Sofia Guo"
+date: "2/28/2019"
+output: pdf_document
+header-includes:
+- \usepackage{amsmath}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+### 0.  Question
+Suppose that $x$ is a positive random variable and that $E[y|x] = g(x)$, where $g$ is an increasing function, so $x_{1} \geq x_{2} \Rightarrow g(x_{1}) \geq g(x_{2})$. Prove that $cov[y, x] \geq 0$.
+
+# 0. Proof:
+We know that $x_{1} \geq x_{2} \Rightarrow g(x_{1}) \geq g(x_{2})$ so $g(x_{1}) - g(x_{2}) \geq 0$ \newline
+$\Rightarrow E[g(x_{1}) - g(x_{2})] \geq 0$ by taking expectations of both sides \newline
+$\Rightarrow E[g(x_{1})] - E[g(x_{2})] \geq 0$ distributing expectations. Given that $E[y|x] = g(x)$ we get the inequality:
+
+\begin{equation}
+E[E[y|x_{1}]] - E[E[y|x_{2}]] \geq 0 \label{eq:1}
+\end{equation}
+
+Now, we look at the definition of $cov[x,y] = E[y(x - \mu)]$ given in class. We can substitute $y = g(x)$ by LIE where $E[y|x] = g(x)$.\newline
+$\Rightarrow cov[x,y] = E[g(x)(x - \mu)]$ \newline
+$\Rightarrow cov[x,y] = E[xg(x) - \mu g(x))]$ \newline
+$\Rightarrow cov[x,y] = E[xg(x)] - E[\mu g(x))]$ \newline
+$\Rightarrow cov[x,y] = E[xE[y|x]] - \mu E[E[y|x]]$ from $E[y|x] = g(x)$. Assuming that $x$ and $E[y|x]$ are independent random variables, we can distribute the expectation in the first term \newline
+$\Rightarrow cov[x,y] = E[x]E[E[y|x]] - \mu E[E[y|x]]$. Since we know that $E[x] = \mu$ we can substitute in the first term \newline
+$\Rightarrow cov[x,y] = \mu E[E[y|x]] - \mu E[E[y|x]]$. Knowing that since $g(x)$ is an increasing function, then $\mu \geq 0$. We can set the $cov[x,y] \geq 0$ and divide each side by $\mu$. We then get the inequality:
+
+\begin{equation}
+E[E[y|x]] - E[E[y|x]] \geq 0 \label{eq:2}
+\end{equation}
+
+Equation \eqref{eq:1} matches equation \eqref{eq:2} in that the expressions are almost identical; if we take $cov[x, y|x_{1},x_{2}]$ from the second equation, we get equation \eqref{eq:1}. \newline
+$\therefore cov[x,y] \geq 0$ $\blacksquare$.
+
+### 0(i).  Question
+Show that $cov[x,y] = E[g(x)(x-\mu)]$ using LIE.
+
+# 0(i). Proof:
+We are given the definition of $cov[x,y] = E[y(x-\mu)]$ from lecture. We can rewrite this to:
+
+\begin{equation}
+cov[x,y] = E[xy] - \mu E[y] \label{eq:3}
+\end{equation}
+
+Now we take another definition of covariance: $cov[x,y] = E[(x-E[x])(y-E[y])]$. Since $E[x] = \mu$ we can write:\newline
+$\Rightarrow cov[x,y] = E[(x-\mu)(y-E[y])]$ \newline
+$\Rightarrow cov[x,y] = E[xy - xE[y] - \mu y + \mu E[y]]$ \newline
+$\Rightarrow cov[x,y] = E[xy] - E[xE[y]] - \mu E[y] + \mu E[E[y]]$. We can simplify terms using LIE: \newline
+$\Rightarrow cov[x,y] = E[xy] - E[xE[y]]$. Assuming that $x$ and $y$ are independent R.V., we simplify to this equation.
+
+\begin{equation}
+cov[x,y] = E[xy] - \mu E[y] \label{eq:4}
+\end{equation}
+
+$\Rightarrow$ Now we see that equation \eqref{eq:3} = \eqref{eq:4}. We substitute $y = E[E[y|x]] = E[g(x)]$. \newline
+$\therefore cov[x,y] = E[xy] - \mu E[y] = E[y(x-\mu)] = E[E[g(x)](x- \mu)] = E[g(x)(x - \mu)]$ $\blacksquare$.
+
+### 0(ii).  Question
+Show that when $x\leq \mu$, $g(x)(x- \mu) > g(\mu)(x - \mu)$ AND $x > \mu$, $g(x)(x- \mu) > g(\mu)(x - \mu)$. Use to prove $E[g(x)(x-\mu)].$
+
+# 0(ii). Proof:
+When $x \leq \mu$, we know that $g(x) \leq g(\mu)$ because $g(x)$ is an increasing function of $x$. \newline
+$\Rightarrow (x-\mu) \leq 0$ because $x \leq \mu$ \newline
+$\Rightarrow g(x)(x-\mu) \geq g(\mu)(x- \mu)$ because multiplying an inequality by a negative value flips the sign. \newline
+
+When $x > \mu$, we know that $g(x) > g(\mu)$ because $g(x)$ is an increasing function of $x$. \newline
+$\Rightarrow (x-\mu) > 0$ because $x > \mu$ \newline
+$\Rightarrow g(x)(x-\mu) > g(\mu)(x- \mu)$ because multiplying an inequality by a positive value preserves the original sign. \newline \newline
+
+Given this equation:
+
+\begin{equation}
+E[g(x)(x- \mu)] = \int_{0}^{\mu}g(x)(x- \mu)f(x)dx + \int_{\mu}^{\infty}g(x)(x- \mu)f(x)dx \label{eq:5}
+\end{equation}
+
+We know that $g(x)(x-\mu) > g(\mu)(x- \mu)$, so we can integrate both sides of the inequality found in the first part. As $g(x)$ is a positive function, $\mu \geq 0$ so we can write: \newline
+$\Rightarrow \int_{0}^{\mu}g(x)(x- \mu)f(x)dx > \int_{0}^{\mu}g(\mu)(x- \mu)d\mu \geq 0$ \newline \newline
+
+Looking at the second term in equation \eqref{eq:5}, we can write a similar expression since we know that $g(x)(x-\mu) > g(\mu)(x- \mu)$: \newline
+$\Rightarrow \int_{\mu}^{\infty}g(x)(x- \mu)f(x)dx > \int_{\mu}^{\infty}g(\mu)(x- \mu)d\mu > 0$ \newline 
+$\therefore E[g(x)(x- \mu)] = \int_{0}^{\mu}g(x)(x- \mu)f(x)dx + \int_{\mu}^{\infty}g(x)(x- \mu)f(x)dx > 0$ because the first term is $\geq 0$ and the second is strictly $>0$, so the sum of these terms must be strictly positive $\blacksquare$.
+
+### 1(a).  Question
+Define the OLS residual for observation $i$ as: $\hat u_{i} = y_{i} - \hat \beta_{0} - \hat \beta_{1}x_{i}$. Show that $\bar y = \hat \beta_{0} + \hat \beta_{1} \bar x$.
+
+# 1(a). Proof:
+We can take the expected value of the given expression: \newline
+$\Rightarrow E[\hat u_{i}] = E[y_{i}] - E[\hat \beta_{0}] - E[\hat \beta_{1}x_{i}]$. From the sample FOC we know that $E[\hat u_{i}] = 0$ from $E[x_{i}\hat u_{i}] = 0$ \newline
+$\Rightarrow 0 = E[y_{i}] - E[\hat \beta_{0}] - E[\hat \beta_{1}x_{i}]$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}y_{i} = \hat \beta_{0} + \hat \beta_{1}\frac{1}{N}\sum_{i=1}^{N}x_{i}$ \newline
+$\therefore \bar y = \hat \beta_{0} + \hat \beta_{1}\bar x$ $\blacksquare$.
+
+### 1(b).  Question
+Show that $y_{i} - \bar y = \hat \beta_{1}(x_{i} - \bar x) + \hat u_{i}$
+
+# 1(b). Proof:
+From (a) we know that $\bar y = \hat \beta_{0} + \hat \beta_{1}\bar x$ \newline
+$\Rightarrow y_{i} - \bar y = y_{i} - \hat \beta_{0} - \hat \beta_{1}\bar x$ \newline
+Given $\hat u_{i} = y_{i} - \hat \beta_{0} - \hat \beta_{1}x_{i}$: \newline
+$\Rightarrow y_{i} - \bar y = \hat \beta_{0} + \hat \beta_{1}x_{i} + \hat u_{i} - \hat \beta_{0} - \hat \beta_{1}\bar x$ \newline
+$\therefore y_{i} - \bar y = \hat \beta_{1}(x_{i} - \bar x) + \hat u_{i}$ $\blacksquare$.
+
+### 1(c).  Question
+Show that $\frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)\hat u_{i} = \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}$
+
+# 1(c). Proof:
+From (a) we know that $\bar y = \hat \beta_{0} + \hat \beta_{1}\bar x$ \newline
+$\Rightarrow y_{i} - \bar y = y_{i} - \hat \beta_{0} - \hat \beta_{1}\bar x$. We want to show that:
+
+\begin{equation}
+\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y) =\frac{1}{N}\sum_{i=1}^{N}\hat u_{i} \label{eq:6}
+\end{equation}
+
+so that we can claim $\frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)\hat u_{i} = \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2$. Given that $\hat u_{i} = y_{i} - \hat \beta_{0} - \hat \beta_{1}x_{i}$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}\hat u_{i} = \frac{1}{N}\sum_{i=1}^{N}(y_{i} - \hat \beta_{0} - \hat \beta_{1}x_{i})$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}\hat u_{i} = \frac{1}{N}\sum_{i=1}^{N}y_{i} - \hat \beta_{0} - \hat \beta_{1}\frac{1}{N}\sum_{i=1}^{N}x_{i}$ we obtain: \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}\hat u_{i} = \bar y - \hat \beta_{0} - \hat \beta_{1}\bar x$ \newline
+From $\Rightarrow y_{i} - \bar y = y_{i} - \hat \beta_{0} - \hat \beta_{1}\bar x$ we can find $\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)$: \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y) = \frac{1}{N}\sum_{i=1}^{N}(y_{i} - \hat \beta_{0} - \hat \beta_{1}\bar x)$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y) = \bar y - \hat \beta_{0} - \hat \beta_{1}\bar x$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y) = \bar y - \hat \beta_{0} - \hat \beta_{1}\bar x =  \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}$. Taking equation \eqref{eq:6} and multiplying both sides by $\hat u_{i}$: \newline
+$\therefore \frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y) \hat u_{i} = (\bar y - \hat \beta_{0} - \hat \beta_{1}\bar x)^2 = \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2$ $\blacksquare$.
+
+### 1(d).  Question
+Show that $\hat \beta_{1}\frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)(x_{i} - \bar x) = \frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)^2 - \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2$
+
+# 1(d). Proof:
+Take $\hat \beta_{1}$ inside the summation for the expression on the left side of the given equation \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}\hat \beta_{1}(y_{i}-\bar y)(x_{i} - \bar x)$. From (b) we know that $y_{i} - \bar y = \hat \beta_{1}(x_{i} - \bar x) + \hat u_{i}$ so that $\hat \beta_{1}(x_{i} - \bar x) = y_{i} - \bar y - \hat u_{i}$. We substitute: \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)((y_{i} - \bar y) - \hat u_{i})$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)^2 - (y_{i} - \bar y)\hat u_{i}$. From (c) and equation \eqref{eq:6} we know that $y_{i} - \bar y = \hat u_{i}$ \newline
+$\Rightarrow \frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)^2 - \hat u_{i}^2$ \newline
+$\therefore \frac{1}{N}\sum_{i=1}^{N}\hat \beta_{1}(y_{i}-\bar y)(x_{i} - \bar x) = \frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)^2 - \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2$ $\blacksquare$.
+
+### 1(e).  Question
+Show that $\rho_{xy}^2 = R^2$
+
+# 1(e). Proof:
+From lecture we know that: $R^2 = 1 - (SSR/SS) = 1 - \frac{\frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2}{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2}$ \newline
+We are given $\rho_{xy} = \frac{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)(x_{i} - \bar x)}{(\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2 *\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2)^{1/2}}$. We can square both sides to get the desired term:
+
+\begin{equation}
+\rho_{xy}^2 = \frac{(\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)(x_{i} - \bar x))^{2}}{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2 *\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2)} \label{eq:7}
+\end{equation}
+
+From (e) we are given $\hat \beta_{1} = \frac{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)(x_{i} - \bar x)}{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2}$. Substituting into equation \eqref{eq:7} we obtain: 
+
+\begin{equation}
+\rho_{xy}^2 = \frac{(\hat \beta_{1} \frac{1}{N} \sum_{i=1}^{N}(x_{i} - \bar x)^2)^{2}}{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2 *\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2)} \label{eq:8}
+\end{equation}
+
+Distributing the square in the numerator and canceling like terms below, we get:
+
+\begin{equation}
+\rho_{xy}^2 = \frac{\hat \beta_{1}^{2} \frac{1}{N} \sum_{i=1}^{N}(x_{i} - \bar x)^2}{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2} \label{eq:9}
+\end{equation}
+
+Using $\hat \beta_{1} = \frac{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)(x_{i} - \bar x)}{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2}$, we rewrite the numerator of equation \eqref{eq:9}: \newline
+$\Rightarrow \hat \beta_{1}^{2} \frac{1}{N} \sum_{i=1}^{N}(x_{i} - \bar x)^2 = \hat \beta_{1} \frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)(x_{i} - \bar x)$ \newline
+
+From (d) we know that $\frac{1}{N}\sum_{i=1}^{N}\hat \beta_{1}(y_{i}-\bar y)(x_{i} - \bar x) = \frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)^2 - \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2$ so we can plug in the latter expression for the numerator from equation \eqref{eq:9} and complete the proof:
+
+\begin{equation}
+\rho_{xy}^2 = \frac{\frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)^2 - \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2}{\frac{1}{N}\sum_{i=1}^{N}(y_{i}-\bar y)^2}= 1 - \frac{\frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2}{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2} = R^2 \label{eq:10}  \blacksquare
+\end{equation}
+
+# 2.  OVB Dataset
+```{r}
+#load libraries
+library(dplyr)
+library(ggplot2)
+library(magrittr)
+library(reshape2)
+library(stargazer)
+library(lubridate)
+library(lmtest)
+library(ivpack)
+library(kableExtra)
+library(sandwich)
+```
+
+```{r}
+#read in dataset
+ovb_raw <- read.csv("/Users/sofia/Box/Cal (sofiaguo@berkeley.edu)/2018-19/Spring 2019/Econ 142/PSETS/PSET 3/ovb.csv", stringsAsFactors = F)
+```
+
+Find the coefficient $\rho_{we}$ between log wages and education for females in the sample given equation:
+
+\begin{equation}
+\rho_{xy} = \frac{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)(x_{i} - \bar x)}{(\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2 *\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2)^{1/2}} \label{eq:11}
+\end{equation}
+
+```{r}
+#restrict the sample to women only
+ovb_fem <- filter(ovb_raw, female ==1)
+
+#define terms
+N <- length(ovb_fem$female)
+x_i <- ovb_fem$educ
+y_i <- ovb_fem$logwage
+y_bar <- mean(ovb_fem$logwage)
+x_bar <- mean(ovb_fem$educ)
+
+#calculate corr. coeff
+rho_fem <- (1/N)*(sum((y_i- y_bar)*(x_i - x_bar)))/((1/N)*(sum((y_i- y_bar)^2)*(1/N)*(sum((x_i- x_bar)^2))))^(1/2)
+rho_fem
+```
+```{r}
+#run the OLS regression and get R^2
+reg_fem <- summary(lm(logwage ~ educ, data = ovb_fem))
+reg_fem$r.squared
+```
+We see that the equality holds true: \newline
+$\rho_{we}^2 = 0.4731^2 = 0.2238 = R^2$.
+
+```{r}
+#verify the same R^2 for switching x and y
+reg_fem_inv <- summary(lm(educ ~ logwage, data = ovb_fem))
+reg_fem_inv$r.squared
+```
+
+To show 1(e) with the reversed regressors we complete the exercise again: \newline
+From lecture we know that: $R^2 = 1 - (SSR/SS) = 1 - \frac{\frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2}{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2}$ \newline
+We are given $\rho_{yx} = \frac{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)(y_{i} - \bar y)}{(\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2 *\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2)^{1/2}}$. We can square both sides to get the desired term:
+
+\begin{equation}
+\rho_{yx}^2 = \frac{(\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)(y_{i} - \bar y))^{2}}{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2 *\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2)} \label{eq:12}
+\end{equation}
+
+From (e) we are given $\hat \beta_{1} = \frac{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)(y_{i} - \bar y)}{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2}$. Substituting into equation \eqref{eq:12} we obtain: 
+
+\begin{equation}
+\rho_{yx}^2 = \frac{(\hat \beta_{1} \frac{1}{N} \sum_{i=1}^{N}(y_{i} - \bar y)^2)^{2}}{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2 *\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2)} \label{eq:13}
+\end{equation}
+
+Distributing the square in the numerator and canceling like terms below, we get:
+
+\begin{equation}
+\rho_{yx}^2 = \frac{\hat \beta_{1}^{2} \frac{1}{N} \sum_{i=1}^{N}(y_{i} - \bar y)^2}{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2} \label{eq:14}
+\end{equation}
+
+Using $\hat \beta_{1} = \frac{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)(y_{i} - \bar y)}{\frac{1}{N}\sum_{i=1}^{N}(y_{i} - \bar y)^2}$, we rewrite the numerator of equation \eqref{eq:12}: \newline
+$\Rightarrow \hat \beta_{1}^{2} \frac{1}{N} \sum_{i=1}^{N}(y_{i} - \bar y)^2 = \hat \beta_{1} \frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)(y_{i} - \bar y)$ \newline
+
+From (d) we know that $\frac{1}{N}\sum_{i=1}^{N}\hat \beta_{1}(x_{i}-\bar x)(y_{i} - \bar y) = \frac{1}{N}\sum_{i=1}^{N}(x_{i}-\bar x)^2 - \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2$ so we can plug in the latter expression for the numerator from equation \eqref{eq:12} and complete the proof:
+
+\begin{equation}
+\rho_{yx}^2 = \frac{\frac{1}{N}\sum_{i=1}^{N}(x_{i}-\bar x)^2 - \frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2}{\frac{1}{N}\sum_{i=1}^{N}(x_{i}-\bar x)^2}= 1 - \frac{\frac{1}{N}\sum_{i=1}^{N}\hat u_{i}^2}{\frac{1}{N}\sum_{i=1}^{N}(x_{i} - \bar x)^2} = R^2 \label{eq:15}  \blacksquare
+\end{equation}
+
+# 3(a). Constructing test stat to test if means are the same
+```{r}
+#compute mean log wages and standard error for female non-immigrants
+ovb_fem_nimm <- filter(ovb_fem, imm == 0)
+
+nimm_mean_wage <- mean(ovb_fem_nimm$logwage)
+nimm_mean_wage
+
+std <- function(x) sd(x)/sqrt(length(x))
+se_nimm <- std(ovb_fem_nimm$logwage)
+se_nimm
+```
+
+```{r}
+#compute mean log wages and standard error for female immigrants
+ovb_fem_imm <- filter(ovb_fem, imm == 1)
+
+imm_mean_wage <- mean(ovb_fem_imm$logwage)
+imm_mean_wage
+
+std <- function(x) sd(x)/sqrt(length(x))
+se_imm <- std(ovb_fem_imm$logwage)
+se_imm
+sqrt(se_imm^2 + se_nimm^2)
+```
+To test if the means are equal, I set the $H_{0}: \mu_{imm} - \mu_{non-imm} = 0$ and $\mu_{imm} - \mu_{non-imm} \neq 0$. 
+
+\begin{equation}
+t = \frac{\mu_{imm} - \mu_{non-imm}}{\sqrt{SE_{imm}^2 + SE_{non-imm}^2}} = \frac{2.706 - 2.886}{0.01753194} = - 10.26617 \label{eq:16}
+\end{equation}
+
+Testing at the 95% confidence level we find that $|-10.266| > 1.96$ $\Rightarrow$ We reject the $H_{0}$ that the means are equal at the $\alpha = 5$% level.
+
+# 3(b). Another test for mean equality
+```{r}
+#run a regression of logwage on constant and immigrant statues
+reg_wage_im <- summary(lm(logwage ~ imm, data = ovb_fem))
+reg_wage_im$coefficients
+
+#is it equal to the diff. in means?
+imm_mean_wage - nimm_mean_wage
+```
+The coefficient on immigrants is equal to the difference in the means I found, but the standard error is off by approximately 0.001.
+
+We calculate the test statistic using this regression's estimates by setting $H_{0}: \hat \beta_{1} = \mu_{imm} - \mu_{non-imm} = 0$ and $\hat \beta_{1} \neq 0$.
+
+\begin{equation}
+t = \frac{\hat \beta_{1}}{\sqrt{SE(\hat \beta_{1})}} = \frac{-0.179985}{0.0165319} = - 10.8871 \label{eq:18}
+\end{equation}
+
+Testing at the 95% confidence level we find that $|-10.8871| > 1.96$ $\Rightarrow$ We reject the $H_{0}$ that the means are equal at the $\alpha = 5$% level. This is not the same test statistic as the one in part (a) because there is likely non-constant variance among the residuals across immigrants and non immigrants.
+
+\newpage
+# 3(c). Fitting heteroskedasticity robust standard errors
+
+```{r}
+ols <- lm(logwage ~ imm, data = ovb_fem)
+ols$robse <- vcovHC(ols, type = 'HC1')
+ols$robse
+sqrt(3.072910e-04)
+```
+
+We find this variance-covariance matrix from the sandwich package:
+
+\[
+VcoV=
+  \begin{bmatrix}
+    4.927052 * 10^{-5} & -4.927052 * 10^{-5} \\
+    -4.927052e * 10^{-5} & 3.072910 * 10^{-4}
+  \end{bmatrix}
+\]
+
+From lecture we know that this matrix is generally:
+
+\[
+VcoV=
+  \begin{bmatrix}
+    (SE(\hat \beta_0))^{2} & Cov(\hat \beta_{1},\hat \beta_{0}) \\
+    Cov(\hat \beta_{0}, \hat \beta_{1}) & (SE(\hat \beta_{1}))^{2}
+  \end{bmatrix}
+\]
+
+So we can calculate the standard errors for $\hat \beta_{1}$ and $\hat \beta_{0}$ by taking the square root of the diagonal elements in the matrix:
+
+\begin{equation}
+SE(\hat \beta_{0}) = \sqrt{4.927052 * 10^{-5}} = 0.007019296
+\end{equation}
+\begin{equation}
+SE(\hat \beta_{1}) = \sqrt{3.072910 * 10^{-4}} = 0.01752972
+\end{equation}
+
+We can see that these robust standard errors are slightly bigger than the ones we estimated in (b), because the robust calculations do not assume homoskedastic errors - thus the standard error calculated is larger (coefficients less accurate) to compensate for the non-constance variance of errors.
